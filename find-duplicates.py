@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-import sys, os, hashlib, filecmp
+import sys, os, filecmp
 
 
 def md5(fname, chunk_size=1024):
+    import hashlib
     hash = hashlib.md5()
     with open(fname, "rb") as f:
         chunk = f.read(chunk_size)
@@ -17,14 +18,17 @@ hashes = {}
 duplicates = []
 
 # Traverse all the files and store their size in a reverse index map
+files_count = 0
 for s in sys.argv[1:]:
     for root, dirs, files in os.walk(s, topdown=True, onerror=None, followlinks=False):
+        files_count += len(files)
         for f in files:
             file = os.path.join(root, f)
             size = os.stat(file).st_size
             if size not in sizes:
                 sizes[size] = []
             sizes[size].append(file)
+print("Traversed {} files".format(files_count))
 
 # Remove empty files from the size map
 if 0 in sizes:
@@ -66,3 +70,5 @@ for i, group in enumerate(duplicates):
     print("%r:" % (i + 1))
     for d in group:
         print("  %r" % (d))
+if not duplicates:
+    print("No duplicates found")
