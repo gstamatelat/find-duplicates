@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
-import sys, os, filecmp
+import sys, os, filecmp, argparse
+
+# Arguments
+parser = argparse.ArgumentParser(description='Find duplicate files using their MD5 hashes.')
+parser.add_argument('directories', metavar='DIR', type=str, nargs='+',
+                    help='directories to search recursively')
+args = parser.parse_args()
 
 
 def md5(fname, chunk_size=1024):
