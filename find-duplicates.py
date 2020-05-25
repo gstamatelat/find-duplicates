@@ -73,6 +73,7 @@ for possible_list in hashes.values():
 
 # Print duplicates
 for i, group in enumerate(duplicates):
+    assert len(group) > 1
     print("%r:" % (i + 1))
     for d in group:
         print("  %r" % (d))
