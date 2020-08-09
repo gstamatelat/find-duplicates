@@ -5,6 +5,8 @@ import sys, os, filecmp, argparse
 parser = argparse.ArgumentParser(description='Find duplicate files using their MD5 hashes.')
 parser.add_argument('directories', metavar='DIR', type=str, nargs='+',
                     help='directories to search recursively')
+parser.add_argument('-d', '--delete', dest='delete', action='store_true',
+                    help='delete the duplicate files (default false)')
 args = parser.parse_args()
 
 
@@ -77,5 +79,9 @@ for i, group in enumerate(duplicates):
     print("%r:" % (i + 1))
     for d in group:
         print("  %r" % (d))
+    if args.delete:
+        for d in group[1:]:
+            os.remove(d)
+            print("  Removed %r" % (d))
 if not duplicates:
     print("No duplicates found")
