@@ -13,11 +13,15 @@ args = parser.parse_args()
 def md5(fname, chunk_size=1024):
     import hashlib
     hash = hashlib.md5()
-    with open(fname, "rb") as f:
-        chunk = f.read(chunk_size)
-        while chunk:
-            hash.update(chunk)
+    try:
+        with open(fname, "rb") as f:
             chunk = f.read(chunk_size)
+            while chunk:
+                hash.update(chunk)
+                chunk = f.read(chunk_size)
+    except OSError as e:
+        print("Warning: Error ({e}) while reading ({fname})".format(e=e, fname=fname))
+        return None
     return hash.hexdigest()
 
 
@@ -51,10 +55,11 @@ for (key, value) in list(sizes.items()):
 for (size, files) in sizes.items():
     for file in files:
         hash = md5(file)
-        tuple = (size, hash)
-        if tuple not in hashes:
-            hashes[tuple] = []
-        hashes[tuple].append(file)
+        if hash is not None:
+            tuple = (size, hash)
+            if tuple not in hashes:
+                hashes[tuple] = []
+            hashes[tuple].append(file)
 
 # Remove files with unique (size, hash) tuple in hash map
 for (key, value) in list(hashes.items()):
