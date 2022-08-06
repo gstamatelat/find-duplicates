@@ -31,7 +31,7 @@ duplicates = []
 
 # Traverse all the files and store their size in a reverse index map
 files_count = 0
-for s in sys.argv[1:]:
+for s in args.directories:
     if not (os.path.exists(s) and os.path.isdir(s)):
         print(f"Directory doesn't exist or not a directory: {s}")
         exit(1)
