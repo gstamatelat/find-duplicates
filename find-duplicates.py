@@ -48,10 +48,10 @@ def read_in_chunks(file_object, chunk_size=4096):
 
 
 # mmap can speed this but it not cross OS compat
-def get_xxhash(fname):
+def get_xxhash(fname, chunk_size=4096):
     h = xxhash.xxh3_128(seed=0)
     with open(fname, 'rb') as input_file:
-        for chunk in read_in_chunks(input_file):
+        for chunk in read_in_chunks(input_file, chunk_size):
             h.update(chunk)
     return h.hexdigest()
 
